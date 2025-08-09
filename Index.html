@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Black god image generator</title>
+  <style>
+    body {
+      background: #000;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 60%;
+      border: none;
+      border-radius: 5px;
+      outline: none;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+      background: #ff0066;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #e6005c;
+    }
+    img {
+      margin-top: 20px;
+      max-width: 80%;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(255,255,255,0.5);
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Black god image generator</h1>
+  
+  <input type="text" id="prompt" placeholder="Describe your image...">
+  <br>
+  <button onclick="generateImage()">Generate</button>
+
+  <div id="result"></div>
+  <div id="downloadBtn"></div>
+
+  <footer>Developed with ❤️ by Black god</footer>
+
+  <script>
+    async function generateImage() {
+      const prompt = document.getElementById('prompt').value;
+      const apiKey = "YOUR_OPENAI_API_KEY"; // Apni API key yahan daalo
+
+      document.getElementById('result').innerHTML = "<p>⏳ Generating...</p>";
+      document.getElementById('downloadBtn').innerHTML = "";
+
+      const response = await fetch("https://api.openai.com/v1/images/generations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: "gpt-image-1",
+          prompt: prompt,
+          size: "512x512"
+        })
+      });
+
+      const data = await response.json();
+      const imageUrl = data.data[0].url;
+
+      document.getElementById('result').innerHTML = `<img src="${imageUrl}" alt="Generated Image">`;
+      document.getElementById('downloadBtn').innerHTML = `<button onclick="downloadImage('${imageUrl}')">Download Image</button>`;
+    }
+
+    function downloadImage(url) {
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = "generated_image.png";
+      link.click();
+    }
+  </script>
+
+</body>
+</html>
